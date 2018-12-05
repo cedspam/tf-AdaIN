@@ -139,8 +139,19 @@ def stylize(content, style, alpha, vgg_t7_file, decode_t7_file, resize=[512,512]
     :param resize=[512,512] Size the images are resized to. Set to None for no resizing.
     '''
     with tf.Graph().as_default() as g, tf.Session(graph=g) as sess, tf.variable_scope(tf.get_variable_scope(), reuse=False) as scope:
-        c, c_filename = image_from_file(g, 'content_image', size=resize)
-        s, s_filename = image_from_file(g, 'style_image',size=resize)
+        feed_dict = {}
+        if  not hasattr(content,"shape")  :
+            c, c_filename = image_from_file(g, 'content_image', size=resize)
+            feed_dict[c_filename]=content
+        else:
+            c=preprocess_image(content, size)
+            
+        if  not hasattr(style,"shape")  :
+            s, s_filename = image_from_file(g, 'style_image',size=resize)
+            feed_dict[s_filename]=style
+         else:
+            s=preprocess_image(style, size)
+            
         _, c_vgg = graph_from_t7(c, g, vgg_t7_file)
         _, s_vgg = graph_from_t7(s, g, vgg_t7_file)
         c_vgg = c_vgg[30]
@@ -150,7 +161,7 @@ def stylize(content, style, alpha, vgg_t7_file, decode_t7_file, resize=[512,512]
         c_decoded = postprocess_image(c_decoded)
         c = postprocess_image(c)
         s = postprocess_image(s)
-        feed_dict = {c_filename: content, s_filename: style}
+        
         combined, style_image, content_image = sess.run([c_decoded, s, c], feed_dict=feed_dict)
         return np.squeeze(combined), np.squeeze(content_image), np.squeeze(style_image)
         
