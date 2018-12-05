@@ -65,8 +65,11 @@ def graph_from_t7(net, graph, t7_file):
                 net = tf.image.resize_nearest_neighbor(net, size)
                 layers.append(net)
             elif module._typename == b'nn.SpatialMaxPooling':
+                module_name=module.name
+                if  isinstance( modulename,bytes):
+                    module_name=modulename.decode(encoding="utf-8", errors="ignore")
                 net = tf.nn.max_pool(net, ksize=[1, module.kH, module.kW, 1], strides=[1, module.dH, module.dW, 1],
-                                   padding='VALID', name = str(module.name, 'utf-8'))
+                                   padding='VALID', name = module_name)
                 layers.append(net)
             else:
                 raise NotImplementedError(module._typename)
