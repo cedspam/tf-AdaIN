@@ -66,7 +66,7 @@ def graph_from_t7(net, graph, t7_file):
                 layers.append(net)
             elif module._typename == b'nn.SpatialMaxPooling':
                 module_name=module.name
-                if  isinstance( modulename,bytes):
+                if  isinstance( module_name,bytes):
                     module_name=module_name.decode(encoding="utf-8", errors="ignore")
                 net = tf.nn.max_pool(net, ksize=[1, module.kH, module.kW, 1], strides=[1, module.dH, module.dW, 1],
                                    padding='VALID', name = module_name)
