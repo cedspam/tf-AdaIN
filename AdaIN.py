@@ -150,7 +150,7 @@ def stylize(content, style, alpha, vgg_t7_file, decode_t7_file, resize=[512,512]
             s, s_filename = image_from_file(g, 'style_image',size=resize)
             feed_dict[s_filename]=style
         else:
-            s=preprocess_image(style, size)
+            s=preprocess_image(style, resize)
             
         _, c_vgg = graph_from_t7(c, g, vgg_t7_file)
         _, s_vgg = graph_from_t7(s, g, vgg_t7_file)
