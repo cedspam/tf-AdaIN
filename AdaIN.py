@@ -144,7 +144,7 @@ def stylize(content, style, alpha, vgg_t7_file, decode_t7_file, resize=[512,512]
             c, c_filename = image_from_file(g, 'content_image', size=resize)
             feed_dict[c_filename]=content
         else:
-            c=preprocess_image(content, size)
+            c=preprocess_image(content, resize)
             
         if  not hasattr(style,"shape")  :
             s, s_filename = image_from_file(g, 'style_image',size=resize)
